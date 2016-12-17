@@ -1,1 +1,1 @@
-# Windows-Examples
+# Windows-Examples## Branch Namimg Specification(chip name)-(software name)-(Windows Version)* chip name: * i.MX6; * AM335x;* Windows-version: * win7; * win8;E.g  i.MX6(chip name)-UARTTest(software name)-Win7(Windows version) = i.MX6-UARTTest-Win7## i.MX6 Windows Examples## AM335x Windows Examples## MCU Windows Examples
