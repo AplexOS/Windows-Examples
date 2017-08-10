@@ -32,10 +32,12 @@ namespace ADBBurningMAC
             eepromVersion.Items.Add("0xFF");
             eepromVersion.SelectedIndex = 0;
 
-            displayType.Items.Add("7\"");
-            displayType.SelectedIndex = 0;
+            displayResolution.Items.Add("7\"");
+            displayResolution.SelectedIndex = 0;
 
             BurningStatue.Enabled = false;
+
+            SystemConfig.parserConfig("config/system_config.json");
         }
 
         // 从数据库中获取第一行中的MAC 
@@ -174,7 +176,7 @@ namespace ADBBurningMAC
 
             // Eeprom.setDisplay((byte)displayType.SelectedIndex);
 
-            Eeprom.dataListConvertToDataArray();
+            Eeprom.dataListConvertToDataArray(0xFF);
             Eeprom.saveData();
         }
 
@@ -208,6 +210,5 @@ namespace ADBBurningMAC
             // BurningStatue.BackColor = Color.Green;
             BurningStatue.BackColor = Color.FromArgb(198, 246, 200);
         }
-
     }
 }

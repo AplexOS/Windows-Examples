@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ADBBurningMAC
 {
     class Eeprom
     {
-        private const byte macIdType11 = 0x01;
-        private const byte displayType = 0x0a;
+        public const byte macIdType1 = 0x01;
+        public const byte macIdType2 = 0x02;
+        public const byte SoftwarePartNumber = 0x03;
+        public const byte backlight = 0x04;
+        public const byte displayID = 0x10;
+        public const byte powerOnLogo = 0x11;
+        public const byte touchPanelID = 0x0a;
+        public const byte EEPROM_END = 0x00;
 
         private const int length = 256;
         public static byte[] sendData = new byte[length];
@@ -64,7 +69,7 @@ namespace ADBBurningMAC
 
                 DataStruct ds = new DataStruct();
                 ds.type = recvData[index++];
-                ds.length = (short)(recvData[index++] | (recvData[index++] << 8));
+                ds.length = recvData[index++];
                 ds.data = new byte[ds.length];
                 for (int i = 0; i < ds.length; i++)
                     ds.data[i] = recvData[index++];
@@ -73,16 +78,24 @@ namespace ADBBurningMAC
             }
         }
 
-        public static String getMac()
+        public static String[] getMac()
         {
+            String[] Macs = new String[2];
+
             foreach (DataStruct ds in fileDataList)
             {
-                if (ds.type == DataStruct.macIdType1)
+                if (ds.type == DataStruct.MAC_ID_TYPE_1)
                 {
-                    return String.Format("{0:X02}:{1:X02}:{2:X02}:{3:X02}:{4:X02}:{5:X02}", ds.data[0], ds.data[1], ds.data[2], ds.data[3], ds.data[4], ds.data[5]);
+                    Macs[0] = String.Format("{0:X02}:{1:X02}:{2:X02}:{3:X02}:{4:X02}:{5:X02}", ds.data[0], ds.data[1], ds.data[2], ds.data[3], ds.data[4], ds.data[5]);
+                }
+
+                if (ds.type == DataStruct.MAC_ID_TYPE_2)
+                {
+                    Macs[1] = String.Format("{0:X02}:{1:X02}:{2:X02}:{3:X02}:{4:X02}:{5:X02}", ds.data[0], ds.data[1], ds.data[2], ds.data[3], ds.data[4], ds.data[5]);
                 }
             }
-            return "";
+
+            return Macs;
         }
 
         public static void setMac(String mac)
@@ -91,7 +104,7 @@ namespace ADBBurningMAC
 
             DataStruct data = new DataStruct();
 
-            data.type = DataStruct.macIdType1;
+            data.type = DataStruct.MAC_ID_TYPE_1;
             data.length = 0x06;
             data.data = new byte[data.length];
 
@@ -101,53 +114,115 @@ namespace ADBBurningMAC
             dataList.Add(data);
         }
 
-        /*
-        public static void setSerialNumber(short serialNumber)
+        public static void setMac(int index, String mac)
         {
+            long macL = long.Parse(mac.Replace(":", ""), System.Globalization.NumberStyles.HexNumber);
+
             DataStruct data = new DataStruct();
 
-            data.type = DataStruct.serialNumberType;
-            data.length = 0x02;
+            if (index == 0) 
+                data.type = DataStruct.MAC_ID_TYPE_1;
+            else
+                data.type = DataStruct.MAC_ID_TYPE_2;
+
+            data.length = 0x06;
             data.data = new byte[data.length];
 
-            for (int i = 0; i < 2; i++)
-                data.data[i] = (byte)((serialNumber >> (i * 8)) & 0xff);
+            for (int i = 0; i < 6; i++)
+                data.data[i] = (byte)((macL >> ((5 - i) * 8)) & 0xff);
 
             dataList.Add(data);
         }
-        */
 
-        /*
-        public static void setDisplay(byte display)
+        public static void setSoftwarePartNumber(String softwarePartNumber)
         {
+            if (softwarePartNumber.Length > 12)
+                return;
+        
             DataStruct data = new DataStruct();
 
-            data.type = DataStruct.displayType;
-            data.length = 0x01;
+            data.type = DataStruct.SOFTWARE_PART_NUMBER;
+            data.length = 6; //(short)(softwarePartNumber.Length);
             data.data = new byte[data.length];
 
-            data.data[data.length - 1] = display;
+            int prefix = int.Parse(softwarePartNumber.Substring(0, 4));
+            uint subfix = uint.Parse(softwarePartNumber.Substring(4, 8));
+
+            data.data[0] = (byte)((prefix >> 8) & 0xff);
+            data.data[1] = (byte)((prefix) & 0xff);
+
+            data.data[2] = (byte)((subfix) >> (8 * 3) & 0xff);
+            data.data[3] = (byte)((subfix) >> (8 * 2) & 0xff);
+            data.data[4] = (byte)((subfix) >> (8 * 1) & 0xff);
+            data.data[5] = (byte)((subfix) >> (8 * 0) & 0xff);
 
             dataList.Add(data);
         }
-        */
 
-        /*
-        public static void setTouch(byte touch)
+        public static void setBacklightControl(byte polarity, byte min, int frequency)
         {
+            if (min <= 0)
+                min = 0;
+
+            if (min >= 40)
+                min = 40;
+
+            if (frequency >= 50000)
+                frequency = 50000;
+
+            if (frequency <= 100)
+                frequency = 100;
+              
             DataStruct data = new DataStruct();
 
-            data.type = DataStruct.touchType;
-            data.length = 0x01;
+            data.type = DataStruct.BACKLIGHT_CTRL;
+            data.length = 4;
             data.data = new byte[data.length];
 
-            data.data[data.length - 1] = touch;
+            data.data[0] = polarity;
+            data.data[1] = min;
+            data.data[2] = (byte)((frequency >> 8) & 0xff);
+            data.data[3] = (byte)((frequency) & 0xff);
 
             dataList.Add(data);
         }
-        */
 
-        public static void dataListConvertToDataArray()
+        public static void setDisplayID(byte resolution, byte colorDepth, byte frameRate, byte displayType)
+        {
+            if (frameRate <= 30)
+                frameRate = 30;
+
+            if (frameRate >= 100)
+                frameRate = 100;
+
+            DataStruct data = new DataStruct();
+
+            data.type = DataStruct.DISPlAY_ID;
+            data.length = 4;
+            data.data = new byte[data.length];
+
+            data.data[0] = resolution;
+            data.data[1] = colorDepth;
+            data.data[2] = frameRate;
+            data.data[3] = displayType;
+
+            dataList.Add(data);
+        }
+
+        public static void setPowerOnLogo(byte logoIndex)
+        {
+            DataStruct data = new DataStruct();
+
+            data.type = DataStruct.DISPlAY_ID;
+            data.length = 1;
+            data.data = new byte[data.length];
+
+            data.data[0] = logoIndex;
+
+            dataList.Add(data);
+        }
+
+        public static void dataListConvertToDataArray(short version)
         {
             initData();
 
@@ -156,23 +231,32 @@ namespace ADBBurningMAC
             foreach (DataStruct ds in dataList)
             {
                 sendData[index++] = ds.type;
-                sendData[index++] = (byte)(ds.length & 0xff);
-                sendData[index++] = (byte)((ds.length >> 8) & 0xff);
+                sendData[index++] = ds.length;
 
                 for (int i = 0; i < ds.length; i++)
                     sendData[index++] = ds.data[i];
             }
+
+            sendData[0xfe] = (byte)((version >> 8) & 0xff);
+            sendData[0xff] = (byte)(version & 0xff);
+
             Console.WriteLine("index: " + index);
         }
     }
 
     class DataStruct
     {
-        public const byte macIdType1 = 0x01;
-        public const byte displayType = 0x0a;
+        public const byte MAC_ID_TYPE_1 = 0x01;
+        public const byte MAC_ID_TYPE_2 = 0x02;
+        public const byte SOFTWARE_PART_NUMBER = 0x03;
+        public const byte BACKLIGHT_CTRL = 0x04;
+        public const byte DISPlAY_ID = 0x10;
+        public const byte POWER_ON_LOGO = 0x11;
+        public const byte TOUCH_PANEL_ID = 0x0a;
+        public const byte EEPROM_END = 0x00;
 
         public byte type;
-        public short length;
+        public byte length;
         public byte[] data;
 
         public void toString()
