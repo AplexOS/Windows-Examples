@@ -13,6 +13,8 @@ namespace InpOut32.Net
 {
     public partial class CSharpExample : Form
     {
+        public Boolean initPortFlag = false;
+
         public CSharpExample()
         {
             InitializeComponent();
@@ -140,13 +142,24 @@ namespace InpOut32.Net
 
         private void setPinValue_Click(object sender, EventArgs e)
         {
-            AplexOS7116GPIO.setPinMode(AplexOS7116GPIO.hexStrToNum(pinIndex.Text.Trim()), AplexOS7116GPIO.hexStrToNum(pinMode.Text.Trim()));
-            AplexOS7116GPIO.setPinVal(AplexOS7116GPIO.hexStrToNum(pinIndex.Text.Trim()), AplexOS7116GPIO.hexStrToNum(pinValue.Text.Trim()));
+            if (this.initPortFlag)
+            {
+                AplexOS7116GPIO.setPinMode(AplexOS7116GPIO.hexStrToNum(pinIndex.Text.Trim()), AplexOS7116GPIO.hexStrToNum(pinMode.Text.Trim()));
+                AplexOS7116GPIO.setPinVal(AplexOS7116GPIO.hexStrToNum(pinIndex.Text.Trim()), AplexOS7116GPIO.hexStrToNum(pinValue.Text.Trim()));
+            } else {
+                MessageBox.Show("Please Init Port");
+            }
         }
 
         private void getPinValue_Click(object sender, EventArgs e)
         {
-            pinValue.Text = AplexOS7116GPIO.getPinVal(AplexOS7116GPIO.hexStrToNum(pinIndex.Text.Trim())).ToString("X") ;
+            if (this.initPortFlag)
+            {
+                AplexOS7116GPIO.setPinMode(AplexOS7116GPIO.hexStrToNum(pinIndex.Text.Trim()), AplexOS7116GPIO.hexStrToNum(pinMode.Text.Trim()));
+                pinValue.Text = AplexOS7116GPIO.getPinVal(AplexOS7116GPIO.hexStrToNum(pinIndex.Text.Trim())).ToString("X") ;
+            } else {
+                MessageBox.Show("Please Init Port");
+            }
         }
 
         private void pinInitPort_Click(object sender, EventArgs e)
@@ -155,6 +168,8 @@ namespace InpOut32.Net
             AplexOS7116GPIO.addressPort = pinAddrPort.Text;
             AplexOS7116GPIO.dataPort = pinDataPort.Text;
             AplexOS7116GPIO.initGPIO();
+
+            this.initPortFlag = true;
         }
     }
 }
