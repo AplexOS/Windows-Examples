@@ -58,3 +58,7 @@
     获取pin对应的GPIO口值，目前只有8个GPIO，pin取值范围为`0~7`，返回值0表示低电平，1表示高电平；
   * `public static void setPinVal(short pin, short val)`  
     设置pin对应的GPIO口值，目前只有8个GPIO，pin取值范围为`0~7`，val的值0表示低电平，1表示高电平；
+	
+## 更改记录
+
+* 20190506 yxl20190506 shiled configure com

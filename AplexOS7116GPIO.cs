@@ -145,8 +145,8 @@ namespace InpOut32.CSharp.Net
                 writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("07"));
                 writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), hexStrToNum("07"));
 
-                writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("1C"));
-                writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), hexStrToNum("1C"));
+                //writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("1C")); //yxl20190506 shiled configure com
+                //writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), hexStrToNum("1C"));
 
                 writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("30"));
                 writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), hexStrToNum("DF"));
