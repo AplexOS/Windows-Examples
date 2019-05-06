@@ -1,0 +1,8 @@
+F:\work project\superIO\test\bin\Release\InpOut32.CSharp.Net.exe.config
+F:\work project\superIO\test\bin\Release\InpOut32.CSharp.Net.exe
+F:\work project\superIO\test\bin\Release\InpOut32.CSharp.Net.pdb
+F:\work project\superIO\test\obj\Release\InpOut32.Net.CSharpExample.resources
+F:\work project\superIO\test\obj\Release\InpOut32.CSharp.Net.Properties.Resources.resources
+F:\work project\superIO\test\obj\Release\InpOut32.CSharp.Net.csproj.GenerateResource.Cache
+F:\work project\superIO\test\obj\Release\InpOut32.CSharp.Net.exe
+F:\work project\superIO\test\obj\Release\InpOut32.CSharp.Net.pdb
