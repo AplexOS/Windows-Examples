@@ -6,3 +6,4 @@ F:\work project\superIO\test\obj\Release\InpOut32.CSharp.Net.Properties.Resource
 F:\work project\superIO\test\obj\Release\InpOut32.CSharp.Net.csproj.GenerateResource.Cache
 F:\work project\superIO\test\obj\Release\InpOut32.CSharp.Net.exe
 F:\work project\superIO\test\obj\Release\InpOut32.CSharp.Net.pdb
+F:\work project\superIO\test\obj\Release\InpOut32.CSharp.Net.csprojResolveAssemblyReference.cache

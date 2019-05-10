@@ -62,7 +62,7 @@ namespace InpOut32.CSharp.Net
         public static short INPUT = 1;
         public static short PIN_SIZE = 8;
 
-        public static string addressPort= "4E";
+        public static string addressPort = "4E";
         public static string dataPort = "4F";
 
         public static short hexStrToNum(string str)
@@ -144,12 +144,19 @@ namespace InpOut32.CSharp.Net
 
                 writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("07"));
                 writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), hexStrToNum("07"));
-
-                //writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("1C")); //yxl20190506 shiled configure com
-                //writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), hexStrToNum("1C"));
+              
 
                 writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("30"));
                 writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), hexStrToNum("DF"));
+                writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("07"));
+                writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), hexStrToNum("08"));
+                writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("30"));
+                writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), hexStrToNum("02"));
+                writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("60"));
+                writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), hexStrToNum("0A"));
+                writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("61"));
+                writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), hexStrToNum("00"));
+                writeByte(hexStrToNum("0A00"), hexStrToNum("02"));
             }
             catch (Exception ex)
             {
@@ -173,8 +180,8 @@ namespace InpOut32.CSharp.Net
         {
             try
             {
-                writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("E8"));
-                writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), iData);
+
+                writeByte(hexStrToNum("0a01"), iData);
             }
             catch (Exception ex)
             {
@@ -187,8 +194,8 @@ namespace InpOut32.CSharp.Net
             short c = 0;
             try
             {
-                writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("E8"));
-                c = readByte(hexStrToNum(AplexOS7116GPIO.dataPort));
+
+                c = readByte(hexStrToNum("0a01"));
             }
             catch (Exception ex)
             {
@@ -204,15 +211,13 @@ namespace InpOut32.CSharp.Net
 
             if (pin < 0 || pin > (PIN_SIZE - 1))
             {
-                MessageBox.Show("Pin Size Range: 0 - " + (PIN_SIZE - 1)+ "\n");
+                MessageBox.Show("Pin Size Range: 0 - " + (PIN_SIZE - 1) + "\n");
                 return c;
             }
 
             try
             {
-                writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("E8"));
-                c = readByte(hexStrToNum(AplexOS7116GPIO.dataPort));
-
+                c = readByte(hexStrToNum("0a01"));
                 return (short)((c >> pin) & 0x01);
             }
             catch (Exception ex)
@@ -243,7 +248,7 @@ namespace InpOut32.CSharp.Net
                 {
                     c = (short)(c & (~(1 << pin)));
                 }
-                else if (mode == INPUT) 
+                else if (mode == INPUT)
                 {
                     c = (short)(c | (1 << pin));
                 }
@@ -254,13 +259,12 @@ namespace InpOut32.CSharp.Net
                 MessageBox.Show("An error occured:\n" + ex.Message);
             }
         }
-
         public static void setPinsVal(short iData)
         {
             try
             {
-                writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("E9"));
-                writeByte(hexStrToNum(AplexOS7116GPIO.dataPort), iData);
+
+                writeByte(hexStrToNum("0A02"), iData);
             }
             catch (Exception ex)
             {
@@ -273,8 +277,8 @@ namespace InpOut32.CSharp.Net
             short c = 0;
             try
             {
-                writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("E9"));
-                c = readByte(hexStrToNum(AplexOS7116GPIO.dataPort));
+
+                c = readByte(hexStrToNum("0A02"));
             }
             catch (Exception ex)
             {
@@ -296,9 +300,8 @@ namespace InpOut32.CSharp.Net
 
             try
             {
-                writeByte(hexStrToNum(AplexOS7116GPIO.addressPort), hexStrToNum("E9"));
-                c = readByte(hexStrToNum(AplexOS7116GPIO.dataPort));
 
+                c = readByte(hexStrToNum("0A02"));
                 return (short)((c >> pin) & 0x01);
             }
             catch (Exception ex)

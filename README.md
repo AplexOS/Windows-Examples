@@ -62,3 +62,4 @@
 ## 更改记录
 
 * 20190506 yxl20190506 shiled configure com
+* 20190510 完善superIO配置
